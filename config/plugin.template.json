@@ -1,0 +1,12 @@
+﻿{
+  "agents": [
+    {
+      "name": "NTP Sentry",
+      "ntpSourceServer": "time.nist.gov",
+	  "ntpServers": [
+		"pool.ntp.org",
+		"time.windows.com"
+	  ]
+    }
+  ]
+}
