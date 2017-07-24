@@ -28,11 +28,6 @@ namespace Org.Healthwise.NewRelic.NTP
             this.ntpSourceServer = ntpsource;
             this.ntpServers = ntpServers;
             ntpServer = new NTP();
-
-            //for (var i = 0; i < ntpServers.Count; i++)
-            //{
-            //    log.Info("Server: ({0})", ntpServers[i]);
-            //}
         }
 
         #region "NewRelic Methods"
@@ -78,9 +73,11 @@ namespace Org.Healthwise.NewRelic.NTP
             DateTime timeSource = new DateTime();
             Boolean ntpSourceAvailable = true;
 
+            // Query the trusted NTP source
             try
             {
                 timeSource = this.ntpServer.GetNetworkTime(this.ntpSourceServer);
+                ntpSourceAvailable = true;
             }
             catch
             {
@@ -88,24 +85,43 @@ namespace Org.Healthwise.NewRelic.NTP
                 ntpSourceAvailable = false;
             }
 
+            // Report on failed attempts to get NTP data from NTP source.
             if (ntpSourceAvailable)
             {
-                for (var i = 0; i < ntpServers.Count; i++)
-                {
-                    try
-                    {
-                        DateTime ntpTime = this.ntpServer.GetNetworkTime((String)this.ntpServers[i]);
-                        TimeSpan ntpDelta = (timeSource - ntpTime).Duration();
+                log.Info("plugin/ntp/source: (0)");
+                ReportMetric("plugin/ntp/source", "count", 0);
+            }
+            else
+            {
+                log.Info("plugin/ntp/source: (1)");
+                ReportMetric("plugin/ntp/source", "count", 1);
+            }
 
+            // Query the other NTP end-points, if the source is available.
+            int memberNTPFailures = 0;
+            for (var i = 0; i < ntpServers.Count; i++)
+            {
+                try
+                {
+                    DateTime ntpTime = this.ntpServer.GetNetworkTime((String)this.ntpServers[i]);
+
+                    if (ntpSourceAvailable)  // Only compute the delta if the source is also available.
+                    {
+                        TimeSpan ntpDelta = (timeSource - ntpTime).Duration();
                         log.Info("plugin/ntp/" + (String)this.ntpServers[i] + "/skew: ({0})", (float)ntpDelta.TotalSeconds);
                         ReportMetric("plugin/ntp/" + (String)this.ntpServers[i] + "/skew", "seconds", (float)ntpDelta.TotalSeconds);
                     }
-                    catch
-                    {
-                        log.Error("Unable to contact NTP server: ({0}).", (String)this.ntpServers[i]);
-                    }
+                }
+                catch
+                {
+                    log.Error("Unable to contact NTP server: ({0}).", (String)this.ntpServers[i]);
+                    memberNTPFailures++;
                 }
             }
+
+            // Report on the of NTP member servers we did NOT contact.
+            log.Info("plugin/ntp/member: ({0})", memberNTPFailures);
+            ReportMetric("plugin/ntp/member", "count", memberNTPFailures);
         }
         #endregion
     }
