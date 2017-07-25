@@ -3,8 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 
 namespace Org.Healthwise.NewRelic.NTP
-{
-    // https://stackoverflow.com/questions/1193955/how-to-query-an-ntp-server-using-c
+{    
     class NTP
     {
         public DateTime GetNetworkTime(String ntpServer)
@@ -38,6 +37,7 @@ namespace Org.Healthwise.NewRelic.NTP
             return measuredTime;
         }
 
+        // https://stackoverflow.com/questions/1193955/how-to-query-an-ntp-server-using-c
         private DateTime _GetNetworkTime(String ntpServer)
         {
             // NTP message size - 16 bytes of the digest (RFC 2030)
