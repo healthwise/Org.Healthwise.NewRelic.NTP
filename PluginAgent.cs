@@ -16,6 +16,7 @@ namespace Org.Healthwise.NewRelic.NTP
         private NTP ntpServer;
         private String ntpSourceServer;
         private List<Object> ntpServers;
+        TimeSpan dangerDrift;  // A maximum of 5 minutes of drift can occur before authenication mechanisms break down.
 
         /// <summary>
         /// Constructor for Agent Class
@@ -28,6 +29,7 @@ namespace Org.Healthwise.NewRelic.NTP
             this.ntpSourceServer = ntpsource;
             this.ntpServers = ntpServers;
             ntpServer = new NTP();
+            dangerDrift = TimeSpan.Zero;
         }
 
         #region "NewRelic Methods"
@@ -99,6 +101,7 @@ namespace Org.Healthwise.NewRelic.NTP
 
             // Query the other NTP end-points, if the source is available.
             int memberNTPFailures = 0;
+            dangerDrift = TimeSpan.Zero;
             for (var i = 0; i < ntpServers.Count; i++)
             {
                 try
@@ -108,6 +111,13 @@ namespace Org.Healthwise.NewRelic.NTP
                     if (ntpSourceAvailable)  // Only compute the delta if the source is also available.
                     {
                         TimeSpan ntpDelta = (timeSource - ntpTime).Duration();
+
+                        // determine if we need to update the dangerDrift value
+                        if (ntpDelta > dangerDrift)
+                        {
+                            dangerDrift = ntpDelta;
+                        }
+
                         log.Info("plugin/ntp/" + (String)this.ntpServers[i] + "/skew: ({0})", (float)ntpDelta.TotalSeconds);
                         ReportMetric("plugin/ntp/" + (String)this.ntpServers[i] + "/skew", "seconds", (float)ntpDelta.TotalSeconds);
                     }
@@ -122,6 +132,10 @@ namespace Org.Healthwise.NewRelic.NTP
             // Report on the of NTP member servers we did NOT contact.
             log.Info("plugin/ntp/member: ({0})", memberNTPFailures);
             ReportMetric("plugin/ntp/member", "count", memberNTPFailures);
+
+            // Report the updated dangerDrift Value
+            log.Info("plugin/ntp/dangerdrift: ({0})", (float)dangerDrift.TotalSeconds);
+            ReportMetric("plugin/ntp/dangerdrift", "seconds", (float)dangerDrift.TotalSeconds);
         }
         #endregion
     }
