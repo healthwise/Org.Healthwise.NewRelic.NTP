@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace Org.Healthwise.NewRelic.NTP
+namespace org.healthwise.newrelic.ntp
 {    
     class NTP
     {

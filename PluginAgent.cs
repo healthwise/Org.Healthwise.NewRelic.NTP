@@ -4,7 +4,7 @@ using NewRelic.Platform.Sdk;
 using NewRelic.Platform.Sdk.Utils;
 using System.Globalization;
 
-namespace Org.Healthwise.NewRelic.NTP
+namespace org.healthwise.newrelic.ntp
 {
     class PluginAgent : Agent
     {

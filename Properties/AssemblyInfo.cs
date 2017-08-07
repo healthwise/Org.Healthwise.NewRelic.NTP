@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Org.Healthwise.NewRelic.NTP")]
+[assembly: AssemblyTitle("org.healthwise.newrelic.ntp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Healthwise, Inc.")]
-[assembly: AssemblyProduct("Org.Healthwise.NewRelic.NTP")]
+[assembly: AssemblyProduct("org.healthwise.newrelic.ntp")]
 [assembly: AssemblyCopyright("Copyright © Healthwise, Inc. 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("fff18c8b-42a9-4fea-8bce-9ababb51d069")]
+[assembly: Guid("ebc66bcc-8efe-40db-806a-0bf43f11dd0f")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.3.0")]
-[assembly: AssemblyFileVersion("0.3.0")]
+[assembly: AssemblyVersion("0.3.1")]
+[assembly: AssemblyFileVersion("0.3.1")]

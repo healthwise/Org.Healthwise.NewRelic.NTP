@@ -2,7 +2,7 @@
 using System.IO;
 using NewRelic.Platform.Sdk;
 
-namespace Org.Healthwise.NewRelic.NTP
+namespace org.healthwise.newrelic.ntp
 {
     class Program
     {
